@@ -1,8 +1,6 @@
-# https://www.youtube.com/watch?v=jM-zWp8dNQA-- FastAPI testing
-# https://www.youtube.com/watch?v=wMxqlHhCUHg-- data validation
-
 from fastapi.testclient import TestClient
 from main import app
+import datetime
 
 # globals for correct column names and schemas
 DB_COL_NAMES = ['State', 'Deadline_in_person', 'Deadline_by_mail', 'Deadline_online', 'Election_day_registration', 'Online_registration_link', 'Description']
@@ -17,6 +15,24 @@ TEST_JSON = {
 }
 
 client = TestClient(app)
+
+#supporting function, not a test
+def is_valid_date_format(date_string, date_format):
+    """
+    Determines if string is in valid date format.
+
+    Args:
+        date_string (str): date string to test
+        date_format (str): date format to test string against
+
+    Returns
+        boolean: whether or not string is in date format
+    """
+    try:
+        datetime.datetime.strptime(date_string, date_format)
+        return True
+    except ValueError:
+        return False
 
 #make sure we get a 200 status code for response
 def test_response_status_code():
@@ -33,7 +49,6 @@ def test_user_unable_to_push_data_to_db():
     response = client.put("/voter_reg_deadlines/", json = TEST_JSON)
     assert response.status_code == 405
 
-
 #make sure the data looks as expected (51 rows, 7 cols)
 def test_response_has_correct_shape():
     response = client.get("/voter_reg_deadlines/")
@@ -42,7 +57,6 @@ def test_response_has_correct_shape():
     for row in response.json():
         if len(row) != 7: 
             problem_rows.append(row)
-    print(problem_rows)
     assert len(response.json()) == 51
     assert len(problem_rows) == 0
 
@@ -54,59 +68,33 @@ def test_data_has_correct_column_names():
     for row in response.json():
         if list(row.keys()) != DB_COL_NAMES:
             problem_rows.append(row)
-    print(problem_rows)
     assert len(problem_rows) == 0
 
-# test that state values are unique
-def test_state_col_is_unique():
+# test that state values are unique and strings
+def test_state_col_is_unique_string_values():
     response = client.get("/voter_reg_deadlines/")
     states = set()
+    problem_states = []
     for row in response.json():
         states.add(row['State'])
+        if not isinstance(row['State'], str):
+            problem_states.append(row['State'])
     assert len(states) == 51
+    assert len(problem_states) == 0
 
-#validate data types
-
-#check for nulls
-
-
-
-
-'''# test that data has correct json schema (correct columns names/order and data types)
-def test_data_has_correct_schema():
+# test that the date columns (Deadline_in_person, Deadline_by_mail, Deadline_online) are strings in date format
+def test_date_cols_are_strings_in_date_format():
     response = client.get("/voter_reg_deadlines/")
-    problem_rows = []
-    for row_object in response.json():
-        print(row_object)
-        if not validate_json_data(str(row_object).replace("\'", "\""), JSON_SCHEMA):
-            problem_rows.append(row_object)
-    print(row_object)
-    assert len(problem_rows) == 0'''
-
-'''#supporting function (not a test)
-def validate_json_data(data, schema):
-    try:
-        json_data = json.loads(data)
-        json_validator = json.JSONValidator(schema)
-        json_validator.validate(json_data)
-        return True
-    except json.JSONDecodeError as e:
-        print("Invalid JSON format:", e)
-        return False
-    except ValidationError as e:
-        print("JSON validation error:", e)
-        return False'''
-
-'''JSON_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "State": {"type": "string"},
-        "Deadline_in_person": {"type": "string", "format": "date"},
-        "Deadline_by_mail": {"type": "string", "format": "date"},
-        "Deadline_online": {"type": "string", "format": "date"},
-        "Election_day_registration": {"type": ["string", "null"]},
-        "Online_registration_link": {"type": ["string", "null"]},
-        "Description": {"type": ["string", "null"]}
-    },
-    "required": ["State", "Deadline_in_person", "Deadline_by_mail", "Deadline_online", "Election_day_registration", "Online_registration_link", "Description"]
-}'''
+    deadline_in_person = {}
+    deadline_by_mail = {}
+    deadline_online = {}
+    for row in response.json():
+        if not is_valid_date_format(row['Deadline_in_person'], "%Y-%m-%d"):
+            deadline_in_person[row['State']] = row['Deadline_in_person']
+        if not is_valid_date_format(row['Deadline_by_mail'], "%Y-%m-%d"):
+            deadline_by_mail[row['State']] = row['Deadline_by_mail']
+        if not is_valid_date_format(row['Deadline_online'], "%Y-%m-%d"):
+            deadline_online[row['State']] = row['Deadline_online']
+    assert len(deadline_in_person) == 0
+    assert len(deadline_by_mail) == 0
+    assert len(deadline_online) == 0
