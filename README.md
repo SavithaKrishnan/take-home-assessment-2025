@@ -50,6 +50,7 @@ If you have any questions at all, feel free to reach out to [dcarden@swingleft.o
 ### Installation
 
 1. Pull down the repo.
+2. Change your PSQL credentials as needed in this file: `take-home-assessment-2025/src/app/api/new_api/database.py`. Save.
 2. Open a terminal.
 3. `npm install --no-save`
 4. `npm run db:create-db`
@@ -59,6 +60,3 @@ If you have any questions at all, feel free to reach out to [dcarden@swingleft.o
 8. Navigate to the `new_api` folder (`cd src/app/api/new_api`).
 9. `uvicorn main:app --reload`
 10. To run API call validation tests, tests can be found in `test_main.py` (`take-home-assessment-2025/src/app/api/new_api/test_main.py`). Open a new terminal and run `pytest`.
-
-
-
