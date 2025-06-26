@@ -1,13 +1,15 @@
-const LOCAL_API = 'http://localhost:3000/api/sample_api'
+import { Table } from './components/Table/Table';
+
+const LOCAL_API = 'http://127.0.0.1:8000/voter_reg_deadlines/'
 
 export default async function Page() {
   const response = await fetch(LOCAL_API);
-  const data = await response.text();
-
+  const data = await response.json();
+  
   return (
     <main>
-      <h1>HELLO</h1>
-      <h1>{data}</h1>
+      <h1>VOTER REGISTRATION DEADLINES (2018)</h1>
+      <Table data = {data}/>
     </main>
   );
 }

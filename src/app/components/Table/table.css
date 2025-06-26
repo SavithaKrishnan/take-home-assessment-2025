@@ -1,0 +1,52 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  text-align: left;
+  color: #e6e5e5;
+  background: #040854;
+}
+
+tr:hover {
+  background: #ddeaf9;
+}
+
+th,td {
+  padding: 4px 6px;
+  border: 1px solid #040854;
+}
+
+th:first-child,
+td:first-child {
+  border-left: 10;
+}
+
+th:last-child,
+th:last-child {
+  border-right: 10;
+}
+
+.controls {
+  display: flex;
+}
+
+input,
+select {
+  flex: 1;
+  padding: 5px 10px;
+  border: 5;
+}
+
+button {
+  background: #2f2f2f;
+  color: #FFF;
+  border: 0;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+h1 {
+  text-align: center;
+}
