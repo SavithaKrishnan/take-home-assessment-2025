@@ -34,10 +34,8 @@ def test_user_unable_to_push_data_to_db():
     assert response.status_code == 405
 
 
-#validate data types
-
 #make sure the data looks as expected (51 rows, 7 cols)
-def test_data_has_correct_shape():
+def test_response_has_correct_shape():
     response = client.get("/voter_reg_deadlines/")
     #track rows that have more or less than 7 columns
     problem_rows = []
@@ -48,7 +46,7 @@ def test_data_has_correct_shape():
     assert len(response.json()) == 51
     assert len(problem_rows) == 0
 
-# test that column names are as expected
+# test that column names are as correct and in order
 def test_data_has_correct_column_names():
     response = client.get("/voter_reg_deadlines/")
     #track rows that have different columns from expected
@@ -66,6 +64,11 @@ def test_state_col_is_unique():
     for row in response.json():
         states.add(row['State'])
     assert len(states) == 51
+
+#validate data types
+
+#check for nulls
+
 
 
 

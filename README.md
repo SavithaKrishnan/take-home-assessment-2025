@@ -49,7 +49,16 @@ If you have any questions at all, feel free to reach out to [dcarden@swingleft.o
 
 ### Installation
 
-1. pull down the repo.
-2. `npm install --no-save`
-3. `npm run db:create-db`
-4. `npm run dev`
+1. Pull down the repo.
+2. Open a terminal.
+3. `npm install --no-save`
+4. `npm run db:create-db`
+5. `npm run dev`
+6. Open a new terminal.
+7. `pip install -r requirements.txt`
+8. Navigate to the `new_api` folder (`cd src/app/api/new_api`).
+9. `uvicorn main:app --reload`
+10. To run API call validation tests, tests can be found in `test_main.py` (`take-home-assessment-2025/src/app/api/new_api/test_main.py`). Open a new terminal and run `pytest`.
+
+
+

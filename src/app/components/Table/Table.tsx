@@ -17,7 +17,7 @@ export type TableProps = {
   data: Data
 }
 
-//reformat column name: capitalize and remove underscore
+// reformat column name (capitalize and remove underscore)
 export const formatColName = (str: string) => str?.replaceAll('_', ' ').replace(/\b\w/g, substr => substr.toUpperCase())
 
 export const Table = ({ data }: TableProps) => {
@@ -25,7 +25,7 @@ export const Table = ({ data }: TableProps) => {
   const [order, setOrder] = useState('asc')
   const [sortKey, setSortKey] = useState(Object.keys(data[0])[0])
 
-  // determining which rows to filter out
+  // to filter rows
   const filter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
@@ -41,7 +41,7 @@ export const Table = ({ data }: TableProps) => {
     }
   }
 
-  //sort rows according to user's selections
+  // to sort rows 
   const sort = (value: keyof Data[0], order: string) => {
     const returnValue = order === 'desc' ? 1 : -1
 
@@ -53,7 +53,7 @@ export const Table = ({ data }: TableProps) => {
     }) ])
   }
 
-  //
+  // to determine asc/desc for sort
   const updateOrder = () => {
     const updatedOrder = order === 'asc' ? 'desc' : 'asc'
 
